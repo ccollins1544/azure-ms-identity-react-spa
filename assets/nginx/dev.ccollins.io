@@ -44,8 +44,9 @@ server {
         return 301 https://$host$request_uri;
     }
 
-    listen 80 default_server;
-    listen [::]:80 default_server;
+    # disabled in case I decide to use port 80 for testing later 
+    #listen 80 default_server;
+    #listen [::]:80 default_server;
 
     server_name dev.ccollins.io;
     return 404; 

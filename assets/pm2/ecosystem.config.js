@@ -29,6 +29,36 @@ module.exports = {
         PORT: 3000
       }
     },
+
+    // pm2 startOrRestart ecosystem.config.js --only react_test --env production
+    {
+      name: 'react_test',
+      cwd: "/home/ubuntu/react_test",
+      script: 'npm',
+      args: "start",
+      instances: 1,
+      autorestart: true,
+      watch: ["src"],
+      out_file: "/home/ubuntu/logs/react_test_out.log",
+      error_file: "/home/ubuntu/logs/react_test_error.log",
+      log_file: "/home/ubuntu/logs/react_test_combined.log",
+      time: true,
+      env: { // defaults 
+        NODE_ENV: 'production',
+        API_PORT: 3003,
+        PORT: 3002
+      },
+      env_production: {
+        NODE_ENV: 'production',
+        API_PORT: 3003,
+        PORT: 3002
+      },
+      env_development: {
+        NODE_ENV: 'development',
+        API_PORT: 3003,
+        PORT: 3002
+      }
+    },
   ],
 
   deploy: {
