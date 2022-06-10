@@ -7,8 +7,8 @@ require('dotenv').config();
 const tenantId = process.env.REACT_APP_TENANT_ID;
 const clientId = process.env.REACT_APP_CLIENT_ID;
 const authority = `https://login.microsoftonline.com/${tenantId}`;
-const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
 const redirectUri = process.env.REACT_APP_REDIRECT_URI || "http://localhost:3000/";
+const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
 const apiClientId = process.env.REACT_APP_API_CLIENT_ID;
 
 /**

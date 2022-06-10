@@ -1,0 +1,11 @@
+# Check when CERT expires with
+sudo openssl x509 -noout -dates -in /etc/letsencrypt/live/dev.ccollins.io/fullchain.pem
+notBefore=Jun 10 14:49:36 2022 GMT
+notAfter=Sep  8 14:49:35 2022 GMT
+
+# Test dry run of renewal
+sudo certbot renew --dry-run
+
+# crontjob example 
+# Certbot renew certificate - At 12:30 on day-of-month 8 in March, June, September, and December
+30 0 8 3,6,9,12 * sudo /usr/bin/certbot renew && sudo systemctl restart nginx && pm2 restart all
