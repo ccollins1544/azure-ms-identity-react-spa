@@ -16,10 +16,10 @@ jobs:
           key: ${{ secrets.CCOLLINS1544_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            pm2 stop azure_spa_main
+            /home/ubuntu/.nvm/versions/node/v16.15.1/bin/pm2 stop azure_spa_main
             cd /home/ubuntu/azure_spa_main/source
             git reset --hard HEAD
             git pull 
-            npm install 
+            /home/ubuntu/.nvm/versions/node/v16.15.1/bin/npm install 
             rsync -avu /home/ubuntu/azure_spa_main/source/assets/pm2/ecosystem.config.js /home/ubuntu/ecosystem.config.js
-            pm2 start /home/ubuntu/ecosystem.config.js --only azure_spa_main --env production
+            /home/ubuntu/.nvm/versions/node/v16.15.1/bin/pm2 start /home/ubuntu/ecosystem.config.js --only azure_spa_main --env production
