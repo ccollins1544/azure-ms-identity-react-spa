@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../authConfig";
 import DropdownButton from "react-bootstrap/DropdownButton";
@@ -21,6 +21,17 @@ export const SignInButton = () => {
       });
     }
   }
+
+  useEffect(() => {
+    let mounted = true;
+    if (mounted) {
+      handleLogin("redirect");
+    }
+    return () => {
+      mounted = false;
+    }
+  }, []);
+
   return (
     <DropdownButton variant="secondary" className="ml-auto" drop="left" title="Sign In">
       <Dropdown.Item as="button" onClick={() => handleLogin("popup")}>Sign in using Popup</Dropdown.Item>
