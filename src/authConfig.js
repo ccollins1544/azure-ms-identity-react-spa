@@ -3,7 +3,6 @@
  * Licensed under the MIT License.
  */
 import { LogLevel } from "@azure/msal-browser";
-require('dotenv').config();
 const tenantId = process.env.REACT_APP_TENANT_ID;
 const clientId = process.env.REACT_APP_CLIENT_ID;
 const authority = `https://login.microsoftonline.com/${tenantId}`;
