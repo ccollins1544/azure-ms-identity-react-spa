@@ -3,13 +3,10 @@
  * Licensed under the MIT License.
  */
 import { LogLevel } from "@azure/msal-browser";
-require('dotenv').config();
 const tenantId = process.env.REACT_APP_TENANT_ID;
 const clientId = process.env.REACT_APP_CLIENT_ID;
 const authority = `https://login.microsoftonline.com/${tenantId}`;
 const redirectUri = process.env.REACT_APP_REDIRECT_URI || "http://localhost:3000/";
-const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
-const apiClientId = process.env.REACT_APP_API_CLIENT_ID;
 
 /**
  * Configuration object to be passed to MSAL instance on creation. 
@@ -17,38 +14,38 @@ const apiClientId = process.env.REACT_APP_API_CLIENT_ID;
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/configuration.md 
  */
 export const msalConfig = {
-    auth: {
-        clientId,
-        authority,
-        redirectUri,
-    },
-    cache: {
-        cacheLocation: "sessionStorage", // This configures where your cache will be stored
-        storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
-    },
-    system: {
-        loggerOptions: {
-            loggerCallback: (level, message, containsPii) => {
-                if (containsPii) {
-                    return;
-                }
-                switch (level) {
-                    case LogLevel.Error:
-                        console.error(message);
-                        return;
-                    case LogLevel.Info:
-                        console.info(message);
-                        return;
-                    case LogLevel.Verbose:
-                        console.debug(message);
-                        return;
-                    case LogLevel.Warning:
-                        console.warn(message);
-                        return;
-                }
-            }
+  auth: {
+    clientId,
+    authority,
+    redirectUri,
+  },
+  cache: {
+    cacheLocation: "sessionStorage", // This configures where your cache will be stored
+    storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
+  },
+  system: {
+    loggerOptions: {
+      loggerCallback: (level, message, containsPii) => {
+        if (containsPii) {
+          return;
         }
+        switch (level) {
+          case LogLevel.Error:
+            console.error(message);
+            return;
+          case LogLevel.Info:
+            console.info(message);
+            return;
+          case LogLevel.Verbose:
+            console.debug(message);
+            return;
+          case LogLevel.Warning:
+            console.warn(message);
+            return;
+        }
+      }
     }
+  }
 };
 
 /**
@@ -58,7 +55,7 @@ export const msalConfig = {
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
 export const loginRequest = {
-    scopes: ["User.Read"]
+  scopes: ["User.Read"]
 };
 
 /**
@@ -66,5 +63,5 @@ export const loginRequest = {
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/resources-and-scopes.md
  */
 export const graphConfig = {
-    graphMeEndpoint: "https://graph.microsoft.com/v1.0/me"
+  graphMeEndpoint: "https://graph.microsoft.com/v1.0/me"
 };
