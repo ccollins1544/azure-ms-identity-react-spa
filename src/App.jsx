@@ -16,14 +16,11 @@ const ProfileContent = () => {
   const [graphData, setGraphData] = useState(null);
 
   function RequestProfileData() {
-    console.log("accounts", accounts); // @todo_cc remove this 
-
     // Silently acquires an access token which is then attached to a request for MS Graph data
     instance.acquireTokenSilent({
       ...loginRequest,
       account: accounts[0]
     }).then((response) => {
-      console.log("response", response); // @todo_cc remove this 
       callMsGraph(response.accessToken).then(response => setGraphData(response));
     });
   }
