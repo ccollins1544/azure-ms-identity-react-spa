@@ -38,7 +38,7 @@ const Calendar = (props) => {
     <AuthenticatedTemplate>
       <div className="mb-3">
         <h1 className="mb-3">{format(weekStart, 'MMMM d, yyyy')} - {format(weekEnd, 'MMMM d, yyyy')}</h1>
-        <RouterNavLink to="/newevent" className="btn btn-light btn-sm" exact>New event</RouterNavLink>
+        <RouterNavLink to="/newevent" className="btn btn-dark btn-sm" exact>New event</RouterNavLink>
       </div>
       <div className="calendar-week">
         <div className="table-responsive">

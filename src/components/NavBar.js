@@ -29,6 +29,9 @@ const NavBar = () => {
               <NavItem>
                 <RouterNavLink to="/calendar" className="nav-link" exact>Calendar</RouterNavLink>
               </NavItem>
+              <NavItem>
+                <RouterNavLink to="/email" className="nav-link" exact>Email</RouterNavLink>
+              </NavItem>
             </AuthenticatedTemplate>
           </Nav>
           <Nav className="ms-auto align-items-center" navbar>

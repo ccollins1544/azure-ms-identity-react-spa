@@ -1,10 +1,28 @@
+import { useEffect, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react';
 import { useAppContext } from '../AppContext';
+import { getUsers } from '../GraphService';
 import Debug from "./Debug";
 
 const Welcome = (props) => {
   const app = useAppContext();
+  const [users, setUsers] = useState();
+
+  useEffect(() => {
+    const loadUsers = async () => {
+      if (app.user && !users) {
+        try {
+          const users = await getUsers(app.authProvider);
+          setUsers(users);
+        } catch (err) {
+          app.displayError(err.message);
+        }
+      }
+    };
+
+    loadUsers();
+  });
 
   return (
     <div className="mb-4 bg-light rounded-3" {...props}>
@@ -23,7 +41,8 @@ const Welcome = (props) => {
           <Button color="primary" onClick={app.signIn}>Click here to sign in</Button>
         </UnauthenticatedTemplate>
 
-        <Debug debugValue={app.user || { test: "false" }} debugLabel="user" />
+        <Debug debugValue={app.user} debugLabel="user" />
+        <Debug debugLabel="All Users" debugValue={users} />
       </Container>
     </div>
   );

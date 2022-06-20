@@ -4,7 +4,9 @@ import ErrorMessage from './components/ErrorMessage';
 import NavBar from './components/NavBar';
 import Welcome from './components/Welcome';
 import Calendar from './components/Calendar';
+import Email from './components/Email';
 import NewEvent from './components/NewEvent';
+import NewEmail from './components/NewEmail';
 import 'bootstrap/dist/css/bootstrap.css';
 import "./styles/App.css";
 
@@ -18,6 +20,8 @@ export default function App() {
           <Route exact path="/" element={<Welcome />} />
           <Route exact path="/calendar" element={<Calendar />} />
           <Route exact path="/newevent" element={<NewEvent />} />
+          <Route exact path="/email" element={<Email />} />
+          <Route exact path="/newemail" element={<NewEmail />} />
         </Routes>
       </Container>
     </Router>
