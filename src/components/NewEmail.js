@@ -40,7 +40,7 @@ export default function NewEmail(props) {
 
       // Only add if a body was given
       body: body.length > 0 ? {
-        contentType: 'text',
+        contentType: 'text', // text or html 
         content: body
       } : undefined
     };

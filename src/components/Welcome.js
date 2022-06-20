@@ -21,7 +21,7 @@ const Welcome = (props) => {
       }
     };
 
-    loadUsers();
+    // loadUsers();
   });
 
   return (
