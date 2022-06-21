@@ -2,7 +2,10 @@ import { Client, GraphRequestOptions, PageCollection, PageIterator } from '@micr
 import { AuthCodeMSALBrowserAuthenticationProvider } from '@microsoft/microsoft-graph-client/authProviders/authCodeMsalBrowser';
 import { endOfWeek, startOfWeek } from 'date-fns';
 import { zonedTimeToUtc } from 'date-fns-tz';
-import { User, Event, Message } from 'microsoft-graph';
+import { User, Event, Message, Photo } from 'microsoft-graph';
+interface Blob {
+  arrayBuffer(): Promise<ArrayBuffer>;
+}
 
 let graphClient: Client | undefined = undefined;
 
@@ -20,12 +23,17 @@ export async function getUser(authProvider: AuthCodeMSALBrowserAuthenticationPro
   ensureClient(authProvider);
 
   // Return the /me API endpoint result as a User object
-  const user: User = await graphClient!.api('/me')
+  return await graphClient!.api('/me')
     // Only retrieve the specific fields needed
-    .select('displayName,mail,mailboxSettings,userPrincipalName')
+    // .select('displayName,mail,mailboxSettings,userPrincipalName')
     .get();
+}
 
-  return user;
+export async function getProfilePhoto(authProvider: AuthCodeMSALBrowserAuthenticationProvider): Promise<string> {
+  ensureClient(authProvider);
+  let avatarBlob = await graphClient!.api('/me/photo/$value').get();
+  const url = window.URL || window.webkitURL;
+  return url.createObjectURL(avatarBlob);
 }
 
 export async function getUserWeekCalendar(authProvider: AuthCodeMSALBrowserAuthenticationProvider,

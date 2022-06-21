@@ -4,6 +4,8 @@ import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-reac
 import { useAppContext } from '../AppContext';
 
 function UserAvatar({ user } = {}) {
+  console.log("UserAvatar user: ", user.avatarBlob);
+
   // If a user avatar is available, return an img tag with the pic
   return <img
     src={user.avatar || '/images/no-profile-photo.png'} alt="user"
@@ -36,9 +38,7 @@ const NavBar = () => {
           </Nav>
           <Nav className="ms-auto align-items-center" navbar>
             <NavItem>
-              <Nav.Link href="https://developer.microsoft.com/graph/docs/concepts/overview" target="_blank">
-                Docs
-              </Nav.Link>
+              <Nav.Link href="https://developer.microsoft.com/graph/docs/concepts/overview" target="_blank">Docs</Nav.Link>
             </NavItem>
             <AuthenticatedTemplate>
               <NavDropdown title={<UserAvatar user={user} />} id="user-dropdown" align="end">
