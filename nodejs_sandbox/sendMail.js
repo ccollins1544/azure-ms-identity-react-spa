@@ -4,7 +4,7 @@ require("colors");
 const path = require('path');
 const scriptName = path.basename(__filename).split('.').slice(0, -1).join('.');
 // eslint-disable-next-line no-undef
-const debug = require('debug')(APP_NAME + ':scripts/tests/' + scriptName.brightWhite);
+const debug = require('debug')(APP_NAME + scriptName.brightWhite);
 const moment = require('moment-timezone');
 const { sendMail } = require("./utils/emailFn");
 

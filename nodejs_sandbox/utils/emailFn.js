@@ -43,8 +43,8 @@ const config = {
   },
   ...(process.env.EMAIL_SERVICE && { service: process.env.EMAIL_SERVICE })
 };
-debug(`*-*-*-*-*-*-*-*-*-*[ ${scriptName} config ]-*-*-*-*-*-*-*-*-*-*-*`.yellow);
-debug(config);
+// debug(`*-*-*-*-*-*-*-*-*-*[ ${scriptName} config ]-*-*-*-*-*-*-*-*-*-*-*`.yellow);
+// debug(config);
 const transporter = nodemailer.createTransport(config);
 
 // =========================[ B. Main Functions ]================================
@@ -239,7 +239,7 @@ const sendMail = async ({
     }
   } catch (err) {
     response = err;
-    debug(err, err?.stack, err?.message);
+    debug("❌ Error sending email message".red, err, err?.stack, err?.message);
   }
 
   if (!response || response.rejected && response.rejected.length > 0 || response.accepted && response.accepted.length === 0 || !response?.accepted) {
