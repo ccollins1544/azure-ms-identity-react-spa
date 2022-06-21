@@ -4,6 +4,7 @@ import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-reac
 import { useAppContext } from '../AppContext';
 import { getUsers } from '../GraphService';
 import Debug from "./Debug";
+const multi_tenant_authority = process.env.REACT_APP_MULTI_TENANT_AUTHORITY === "true";
 
 const Welcome = (props) => {
   const app = useAppContext();
@@ -21,7 +22,7 @@ const Welcome = (props) => {
       }
     };
 
-    // loadUsers();
+    multi_tenant_authority && loadUsers();
   });
 
   return (
