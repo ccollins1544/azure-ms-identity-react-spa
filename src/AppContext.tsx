@@ -151,7 +151,6 @@ function useProvideAppContext() {
         scopes, prompt: 'select_account'
       }).catch(e => console.log("signIn Error", e));
     }
-
     console.log(`signIn ${loginType} response`, azureResponse);
 
     // Get the user from Microsoft Graph
