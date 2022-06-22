@@ -51,7 +51,7 @@ export async function getUserWeekCalendar(authProvider: AuthCodeMSALBrowserAuthe
     .api('/me/calendarview')
     .header('Prefer', `outlook.timezone="${timeZone}"`)
     .query({ startDateTime: startDateTime, endDateTime: endDateTime })
-    .select('subject,organizer,start,end')
+    // .select('subject,organizer,start,end')
     .orderby('start/dateTime')
     .top(25)
     .get();
@@ -103,7 +103,7 @@ export async function getUsers(authProvider: AuthCodeMSALBrowserAuthenticationPr
     .get();
 
   const moreAvailable = userPage['@odata.nextLink'] !== undefined;
-  console.log(`\nMore users available? ${moreAvailable}`);
+  console.log(`More users available? ${moreAvailable}`);
 
   let users = userPage.value;
   return users;
@@ -121,7 +121,7 @@ export async function getUserEmails(authProvider: AuthCodeMSALBrowserAuthenticat
     .get();
 
   const moreAvailable = messages['@odata.nextLink'] !== undefined;
-  console.log(`\nMore messages available? ${moreAvailable}`);
+  console.log(`More messages available? ${moreAvailable}`);
 
   return messages.value;
 }
