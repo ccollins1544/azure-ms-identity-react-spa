@@ -37,8 +37,8 @@ export interface AppError {
 type AppContext = {
   user?: AppUser;
   error?: AppError;
-  signIn?: MouseEventHandler<HTMLElement>;
-  signOut?: MouseEventHandler<HTMLElement>;
+  signIn?: Function;
+  signOut?: Function;
   displayError?: Function;
   clearError?: Function;
   authProvider?: AuthCodeMSALBrowserAuthenticationProvider;
@@ -140,33 +140,60 @@ function useProvideAppContext() {
     checkUser();
   });
 
-  const signIn = async () => {
-    await msal.instance.loginPopup({
-      scopes,
-      prompt: 'select_account'
-    }).catch(e => {
-      console.log("signIn Error", e);
-    })
-    // .then((response) => {
-    //   console.log("signIn popup response", response);
-    // });
+  const signIn = async (loginType?: string) => {
+    let azureResponse;
+    if (loginType === "redirect") {
+      azureResponse = await msal.instance.loginRedirect({
+        scopes
+      }).catch(e => console.log("signIn Error", e));
+    } else {
+      azureResponse = await msal.instance.loginPopup({
+        scopes, prompt: 'select_account'
+      }).catch(e => console.log("signIn Error", e));
+    }
+
+    console.log(`signIn ${loginType} response`, azureResponse);
 
     // Get the user from Microsoft Graph
     const user = await getUser(authProvider);
+    const email = user?.mail || user?.userPrincipalName || '';
+    const timeFormat = user?.mailboxSettings?.timeFormat || 'h:mm a';
+    const timeZone = user?.mailboxSettings?.timeZone || 'UTC';
+
+    // Get the user's profile photo
+    const avatar = await getProfilePhoto(authProvider);
 
     setUser({
+      ageGroup: user.ageGroup || '',
+      businessPhones: user.businessPhones || [''],
       displayName: user.displayName || '',
-      email: user.mail || user.userPrincipalName || '',
-      timeFormat: user.mailboxSettings?.timeFormat || '',
-      timeZone: user.mailboxSettings?.timeZone || 'UTC'
+      givenName: user.givenName || '',
+      id: user.id || '',
+      jobTitle: user.jobTitle || '',
+      mobilePhone: user.mobilePhone || '',
+      officeLocation: user.officeLocation || '',
+      preferredLanguage: user.preferredLanguage || '',
+      surname: user.surname || '',
+      email,
+      avatar,
+      timeFormat,
+      timeZone
     });
+
+    return azureResponse;
   };
 
-  const signOut = async () => {
-    await msal.instance.logoutPopup({
-      postLogoutRedirectUri: "/",
-      mainWindowRedirectUri: "/"
-    });
+  const signOut = async (logoutType?: string) => {
+    if (logoutType === "redirect") {
+      await msal.instance.logoutRedirect({
+        postLogoutRedirectUri: "/",
+      });
+    } else {
+      await msal.instance.logoutPopup({
+        postLogoutRedirectUri: "/",
+        mainWindowRedirectUri: "/"
+      });
+    }
     setUser(undefined);
   };
 

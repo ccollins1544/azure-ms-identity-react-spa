@@ -9,6 +9,7 @@ import { endOfWeek, startOfWeek } from 'date-fns/esm';
 import { getUserWeekCalendar } from '../GraphService';
 import { useAppContext } from '../AppContext';
 import CalendarDayRow from './CalendarDayRow';
+import Debug from "./Debug";
 import './Calendar.css';
 
 const Calendar = (props) => {
@@ -83,6 +84,8 @@ const Calendar = (props) => {
           </Table>}
         </div>
       </div>
+
+      <Debug debugLabel="events" debugValue={events} />
     </AuthenticatedTemplate>
   );
 }

@@ -4,8 +4,6 @@ import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-reac
 import { useAppContext } from '../AppContext';
 
 function UserAvatar({ user } = {}) {
-  console.log("UserAvatar user: ", user.avatarBlob);
-
   // If a user avatar is available, return an img tag with the pic
   return <img
     src={user.avatar || '/images/no-profile-photo.png'} alt="user"
