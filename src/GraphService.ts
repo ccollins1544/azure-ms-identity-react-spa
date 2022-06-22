@@ -2,10 +2,7 @@ import { Client, GraphRequestOptions, PageCollection, PageIterator } from '@micr
 import { AuthCodeMSALBrowserAuthenticationProvider } from '@microsoft/microsoft-graph-client/authProviders/authCodeMsalBrowser';
 import { endOfWeek, startOfWeek } from 'date-fns';
 import { zonedTimeToUtc } from 'date-fns-tz';
-import { User, Event, Message, Photo } from 'microsoft-graph';
-interface Blob {
-  arrayBuffer(): Promise<ArrayBuffer>;
-}
+import { User, Event, Message } from 'microsoft-graph';
 
 let graphClient: Client | undefined = undefined;
 
