@@ -9,12 +9,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@azure/identity": "^2.0.5",
+    "@microsoft/microsoft-graph-client": "^3.0.2",
     "colors": "^1.4.0",
     "debug": "^4.3.4",
     "dotenv": "^16.0.1",
     "glob": "^8.0.3",
+    "isomorphic-fetch": "^3.0.0",
     "moment": "^2.29.3",
     "moment-timezone": "^0.5.34",
-    "nodemailer": "^6.7.5"
+    "nodemailer": "^6.7.5",
+    "readline-sync": "^1.4.10"
   }
 }
