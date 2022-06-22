@@ -5,7 +5,7 @@ import { AuthenticatedTemplate } from '@azure/msal-react';
 
 import { getUserEmails } from '../GraphService';
 import { useAppContext } from '../AppContext';
-// import Debug from "./Debug";
+import Debug from "./Debug";
 
 const Email = (props) => {
   const app = useAppContext();
@@ -55,7 +55,7 @@ const Email = (props) => {
         </div>
       </div>
 
-      {/* <Debug debugLabel="Emails" debugValue={emails} /> */}
+      <Debug debugLabel="Emails" debugValue={emails} />
     </AuthenticatedTemplate>
   );
 }
