@@ -198,6 +198,7 @@ function useProvideAppContext() {
 
   return {
     user,
+    setUser,
     error,
     signIn,
     signOut,
