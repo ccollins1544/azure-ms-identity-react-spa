@@ -28,6 +28,7 @@ type getEmailParams = {
   orderByParams?: string,
   sortField?: string,
   sortOrder?: string,
+  appliedFilters?: { [key: string]: string },
 };
 
 type sendEmailParams = {
@@ -296,6 +297,44 @@ export async function getUserCalendar(authProvider: AuthCodeMSALBrowserAuthentic
   return data;
 };
 
+export async function getUserEvent(authProvider: AuthCodeMSALBrowserAuthenticationProvider, eventId: string, formatTheData: boolean = true): Promise<Event> {
+  ensureClient(authProvider);
+  let data = await graphClient!.api(`/me/events/${eventId}`).get();
+
+  if (formatTheData && data?.id === eventId) {
+    let first_name = '', last_name = '';
+    if (data?.organizer?.emailAddress?.name) {
+      first_name = data.organizer.emailAddress.name.split(' ')[0];
+      last_name = data.organizer.emailAddress.name.split(' ')[1];
+    }
+
+    let task_status_id = 1; // Created
+    let start_timestamp = parseISO(data.start?.dateTime);
+    let end_timestamp = parseISO(data.end?.dateTime);
+
+    let event_formatted = {
+      task_status_id,
+      start_timestamp,
+      end_timestamp,
+      assigned_user: {
+        first_name,
+        last_name,
+      },
+      task_status: {
+        status: "Created"
+      },
+      title: data?.subject,
+      allDay: data?.isAllDay,
+      start: new Date(start_timestamp),
+      end: new Date(end_timestamp),
+      description: data?.bodyPreview || data?.body?.content || '',
+      styles: { backgroundColor: "#396799" }
+    };
+    data = { ...data, ...event_formatted };
+  }
+  return data;
+};
+
 export async function createEvent(authProvider: AuthCodeMSALBrowserAuthenticationProvider, newEvent: Event): Promise<User> {
   ensureClient(authProvider);
 
@@ -309,7 +348,7 @@ export async function createEvent(authProvider: AuthCodeMSALBrowserAuthenticatio
 export async function getUserEmails(authProvider: AuthCodeMSALBrowserAuthenticationProvider, params: getEmailParams): Promise<Message[]> {
   ensureClient(authProvider);
 
-  let { selectParams, orderByParams, limit, offset, sortField, sortOrder } = params || {};
+  let { selectParams, orderByParams, limit, offset, sortField, sortOrder, appliedFilters } = params || {};
   if (!Array.isArray(selectParams)) {
     selectParams = ['from', 'sender', 'isRead', 'isDraft', 'toRecipients', 'ccRecipients', 'bccRecipients', 'replyTo', 'flag', 'receivedDateTime', 'sentDateTime', 'categories', 'subject', 'body', 'bodyPreview', 'hasAttachments', 'importance', 'webLink'];
   }
@@ -318,6 +357,9 @@ export async function getUserEmails(authProvider: AuthCodeMSALBrowserAuthenticat
   }
   if (!sortField || typeof sortField !== 'string') {
     sortField = 'receivedDateTime';
+  }
+  if (['from', 'sender'].includes(sortField)) {
+    sortField = `${sortField}/emailAddress/address`;
   }
   if (!orderByParams || typeof orderByParams !== 'string') {
     orderByParams = `${sortField} ${sortOrder}`;
@@ -329,13 +371,22 @@ export async function getUserEmails(authProvider: AuthCodeMSALBrowserAuthenticat
     offset = 0;
   }
 
+  // Can only have 1 filter at the moment so we'll just take the first one
+  let searchStr = appliedFilters ? Object.entries(appliedFilters).map(([k, v]) => `"${k}:${v}"`)[0] : '';
+
   // GET /me/messages?$select=sender,subject
-  let messages = await graphClient!
+  let messages = searchStr ? await graphClient!
     .api('/me/messages')
     .select(selectParams)
-    .top(limit)
-    .orderby(orderByParams)
-    .get();
+    .search(searchStr)
+    .get()
+    : await graphClient!
+      .api('/me/messages')
+      .select(selectParams)
+      .top(limit)
+      .orderby(orderByParams)
+      .skip(offset)
+      .get();
 
   const moreAvailable = messages['@odata.nextLink'] !== undefined;
   (moreAvailable) && console.log("More messages available");
@@ -365,4 +416,13 @@ export async function sendMail(authProvider: AuthCodeMSALBrowserAuthenticationPr
   return await graphClient!
     .api('/me/sendMail')
     .post(sendMail);
+};
+
+export async function deleteEmail(authProvider: AuthCodeMSALBrowserAuthenticationProvider, emailId: string): Promise<void> {
+  ensureClient(authProvider);
+
+  // DELETE /me/messages/{id}
+  return await graphClient!
+    .api(`/me/messages/${emailId}`)
+    .delete();
 };

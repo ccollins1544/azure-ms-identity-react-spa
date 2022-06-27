@@ -2,29 +2,61 @@ import { useEffect, useState } from 'react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 import { Table } from 'react-bootstrap';
 import { AuthenticatedTemplate } from '@azure/msal-react';
-
-import { getUserEmails } from '../GraphService';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
+import moment from 'moment';
+import { getUserEmails, deleteEmail } from '../GraphService';
 import { useAppContext } from '../AppContext';
 import Debug from "./Debug";
 
 const Email = (props) => {
-  const app = useAppContext();
+  const { user, authProvider, displayError } = useAppContext();
   const [emails, setEmails] = useState();
+  const [invokeUpdate, setInvokeUpdate] = useState(false);
+
+  const deleteMessage = async (event) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    let clickedElement = event?.target || {};
+    let { dataset, tagName, parentElement } = clickedElement || {};
+
+    // Go up one level in the DOM 
+    if (tagName !== "svg" && parentElement?.tagName === "svg") {
+      clickedElement = parentElement;
+      parentElement = clickedElement.parentElement;
+      dataset = { ...dataset, ...clickedElement?.dataset };
+      tagName = clickedElement?.tagName;
+    }
+
+    let { id: emailId } = dataset || {};
+    try {
+      if (!emailId || /\D/.test(emailId) === false) {
+        throw new Error(`Invalid ID ${emailId}`);
+      }
+      await deleteEmail(authProvider, emailId);
+      setInvokeUpdate((prev) => !prev);
+    } catch (err) {
+      displayError(err.message);
+    }
+    return;
+  };
 
   useEffect(() => {
     const loadEmails = async () => {
-      if (app.user && !emails) {
+      if (user) {
         try {
-          const emails = await getUserEmails(app.authProvider);
+          const emails = await getUserEmails(authProvider, { limit: 15 });
           setEmails(emails);
         } catch (err) {
-          app.displayError(err.message);
+          displayError(err.message);
         }
       }
     };
 
     loadEmails();
-  });
+  }, [invokeUpdate]);
 
   return (
     <AuthenticatedTemplate>
@@ -39,14 +71,16 @@ const Email = (props) => {
               <tr>
                 <th>Read</th>
                 <th>From</th>
+                <th>Received</th>
                 <th>Subject</th>
                 <th>Body</th>
               </tr>
             </thead>
             <tbody>
               {emails.map(email => <tr key={email.id}>
-                <td>{email.isRead ? "true" : "false"}</td>
+                <td><FontAwesomeIcon icon={email.isRead ? solid('trash') : solid('trash-can')} onClick={deleteMessage} data-id={email.id} /></td>
                 <td>{email.from.emailAddress.name}</td>
+                <td>{email.receivedDateTime ? moment(email.receivedDateTime).format('MM/DD/YYYY hh:mm A') : ''}</td>
                 <td>{email.subject}</td>
                 <td>{email.bodyPreview ? email.bodyPreview : <div dangerouslySetInnerHTML={{ __html: email.body.content }}></div>}</td>
               </tr>)}

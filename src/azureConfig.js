@@ -43,7 +43,7 @@ const msalConfig = {
   }
 };
 
-const scopes = ["user.read", "mailboxsettings.read", "calendars.readwrite", "mail.read", "mail.send"];
+const scopes = ["user.read", "mailboxsettings.read", "calendars.readwrite", "mail.read", "mail.send", "mail.readwrite"];
 
 export {
   tenantId,
