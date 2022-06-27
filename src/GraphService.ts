@@ -426,3 +426,12 @@ export async function deleteEmail(authProvider: AuthCodeMSALBrowserAuthenticatio
     .api(`/me/messages/${emailId}`)
     .delete();
 };
+
+export async function updateEmail(authProvider: AuthCodeMSALBrowserAuthenticationProvider, emailId: string, message: Message): Promise<void> {
+  ensureClient(authProvider);
+
+  // DELETE /me/messages/{id}
+  return await graphClient!
+    .api(`/me/messages/${emailId}`)
+    .update(message);
+};
